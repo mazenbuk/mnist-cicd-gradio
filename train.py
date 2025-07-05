@@ -3,7 +3,6 @@ import torch.nn as nn
 import torch.optim as optim
 from torchvision import datasets, transforms
 
-# arsitektur CNN
 class SimpleCNN(nn.Module):
     def __init__(self):
         super(SimpleCNN, self).__init__()
@@ -22,28 +21,35 @@ class SimpleCNN(nn.Module):
         x = self.fc2(x)
         return x
 
-# Persiapan Data
-transform = transforms.Compose([
-    transforms.ToTensor(),
-    transforms.Normalize((0.5,), (0.5,))
-])
+if __name__ == "__main__":
+    # Persiapan Data
+    transform = transforms.Compose([
+        transforms.ToTensor(),
+        transforms.Normalize((0.5,), (0.5,))
+    ])
+    
+    # Membuat direktori jika belum ada
+    import os
+    os.makedirs('data', exist_ok=True)
+    os.makedirs('model', exist_ok=True)
 
-train_dataset = datasets.MNIST(root='./Data', train=True, download=True, transform=transform)
-train_loader = torch.utils.data.DataLoader(train_dataset, batch_size=64, shuffle=True)
+    train_dataset = datasets.MNIST(root='./data', train=True, download=True, transform=transform)
+    train_loader = torch.utils.data.DataLoader(train_dataset, batch_size=64, shuffle=True)
 
-model = SimpleCNN()
-criterion = nn.CrossEntropyLoss()
-optimizer = optim.Adam(model.parameters(), lr=0.001)
+    # Inisialisasi Model, Loss, dan Optimizer
+    model = SimpleCNN()
+    criterion = nn.CrossEntropyLoss()
+    optimizer = optim.Adam(model.parameters(), lr=0.001)
 
-#train model
-for epoch in range(3):
-    for images, labels in train_loader:
-        optimizer.zero_grad()
-        outputs = model(images)
-        loss = criterion(outputs, labels)
-        loss.backward()
-        optimizer.step()
-    print(f"Epoch {epoch+1}, Loss: {loss.item()}")
+    # Loop Pelatihan Model
+    for epoch in range(3):
+        for images, labels in train_loader:
+            optimizer.zero_grad()
+            outputs = model(images)
+            loss = criterion(outputs, labels)
+            loss.backward()
+            optimizer.step()
+        print(f"Epoch {epoch+1}, Loss: {loss.item()}")
 
-#simpan model
-torch.save(model.state_dict(), 'Model/mnist_cnn.pth')
+    # Simpan Model
+    torch.save(model.state_dict(), 'model/mnist_cnn.pth')

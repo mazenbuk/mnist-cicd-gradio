@@ -25,15 +25,17 @@ update-branch:
 	git commit -am "Update with new results"
 	git push --force origin HEAD:update
 
-# hf-login:
-# 	pip install -U "huggingface_hub[cli]"
-# 	huggingface-cli login --token $(HF) --add-to-git-credential
+hf-login:
+	git pull origin update
+	git switch update
+	pip install -U "huggingface_hub[cli]"
+	huggingface-cli login --token $(HF) --add-to-git-credential
 
-# push-hub:
-# 	huggingface-cli upload mazenbuk/nmist ./app . --repo-type=space --commit-message="Sync App files"
-# 	huggingface-cli upload mazenbuk/nmist ./model/mnist_cnn.pth model/mnist_cnn.pth --repo-type=space --commit-message="Sync Model File"
-# 	if [ -f ./Results/metrics.txt ]; then \
-# 		huggingface-cli upload mazenbuk/nmist ./Results/metrics.txt Results/metrics.txt --repo-type=space --commit-message="Sync Metrics File"; \
-# 	fi
+push-hub:
+	huggingface-cli upload mazenbuk/nmist ./app . --repo-type=space --commit-message="Sync App files"
+	huggingface-cli upload mazenbuk/nmist ./model/mnist_cnn.pth model/mnist_cnn.pth --repo-type=space --commit-message="Sync Model File"
+	if [ -f ./Results/metrics.txt ]; then \
+		huggingface-cli upload mazenbuk/nmist ./Results/metrics.txt Results/metrics.txt --repo-type=space --commit-message="Sync Metrics File"; \
+	fi
 
-# deploy: hf-login push-hub
+deploy: hf-login push-hub
