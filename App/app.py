@@ -1,7 +1,9 @@
 import gradio as gr
 import torch
+import torch.nn as nn
 import torchvision.transforms as transforms
 from PIL import Image, ImageOps
+import numpy as np
 import sys
 import os
 
@@ -25,7 +27,7 @@ def predict_digit(input_data):
 
     if image_array is None:
         return {str(i): 0 for i in range(10)}
-
+        
     image = Image.fromarray(image_array.astype('uint8'), 'RGB')
     image = ImageOps.grayscale(image)
     image = ImageOps.invert(image)
@@ -44,6 +46,7 @@ def predict_digit(input_data):
         centered_image = Image.new("L", (28, 28), 0)
 
     image_tensor = transform(centered_image).unsqueeze(0)
+    
     with torch.no_grad():
         output = model(image_tensor)
         probabilities = torch.nn.functional.softmax(output, dim=1)
@@ -58,4 +61,4 @@ iface = gr.Interface(
     description="Gambar sebuah digit dari 0-9 pada kanvas di bawah dan klik 'Submit' untuk melihat prediksi model."
 )
 
-iface.launch()
+iface.launch(server_name="0.0.0.0")
