@@ -33,6 +33,7 @@ hf-login:
 
 push-hub:
 	huggingface-cli upload mazenbuk/nmist ./App . --repo-type=space --commit-message="Sync App files"
+	huggingface-cli upload mazenbuk/nmist ./train.py train.py --repo-type=space --commit-message="Sync train script"
 	huggingface-cli upload mazenbuk/nmist ./Model/mnist_cnn.pth model/mnist_cnn.pth --repo-type=space --commit-message="Sync Model File"
 	if [ -f ./Results/metrics.txt ]; then \
 		huggingface-cli upload mazenbuk/nmist ./Results/metrics.txt Results/metrics.txt --repo-type=space --commit-message="Sync Metrics File"; \
