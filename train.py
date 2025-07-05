@@ -46,4 +46,4 @@ for epoch in range(3):
     print(f"Epoch {epoch+1}, Loss: {loss.item()}")
 
 #simpan model
-torch.save(model.state_dict(), 'model/mnist_cnn.pth')
+torch.save(model.state_dict(), 'Model/mnist_cnn.pth')
