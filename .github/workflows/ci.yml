@@ -1,27 +1,32 @@
+# 225150200111004_1 HAIKAL THORIQ ATHAYA_1
+# 225150200111008_2 MUHAMMAD ARSYA ZAIN YASHIFA_2
+# 225150201111001_3 JAVIER AAHMES REANSYAH_3
+# 25150201111003_4 MUHAMMAD HERDI ADAM_4
+
 name: Continuous Integration
 
 on:
   push:
-    branches: [ "main" ]
+    branches: ["main"]
+  pull_request:
+    branches: ["main"]
   workflow_dispatch:
 
 permissions: write-all
 
 jobs:
-  light_ci:
+  pull_request_integration:
+    if: github.event_name == 'pull_request'
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v3
-
       - name: Install Packages
         run: make install
-
       - name: Format Code
         run: make format
 
-  train_and_deploy:
+  integration:
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
 
