@@ -71,4 +71,4 @@ if __name__ == "__main__":
     # Save model
     os.makedirs('Model', exist_ok=True)
     torch.save(model.state_dict(), 'Model/mnist_cnn.pth')
-    print("Model saved to Model/mnist_cnn.pth")
+    print("MNIST Model saved to Model/mnist_cnn.pth")
