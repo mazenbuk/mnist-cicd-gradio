@@ -10,23 +10,32 @@ on:
 permissions: write-all
 
 jobs:
-  build:
+  light_ci:
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v3
-        with:
-          fetch-depth: 0
-
-      - name: Setup CML
-        uses: iterative/setup-cml@v2
 
       - name: Install Packages
         run: make install
 
       - name: Format Code
         run: make format
+
+  train_and_deploy:
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+
+      - name: Setup CML
+        uses: iterative/setup-cml@v2
+
+      - name: Install Packages
+        run: make install
 
       - name: Train Model
         run: make train
@@ -35,7 +44,7 @@ jobs:
         env:
           REPO_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: make eval
-        
+
       - name: Update Branch
         env:
           NAME: ${{ secrets.USER_NAME }}

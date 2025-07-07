@@ -69,6 +69,6 @@ if __name__ == "__main__":
         print(f"Epoch [{epoch+1}/{num_epochs}] - Loss: {epoch_loss:.4f} - Accuracy: {accuracy:.2f}%")
 
     # Save model
-    os.makedirs('model', exist_ok=True)
-    torch.save(model.state_dict(), 'model/mnist_cnn.pth')
-    print("Model saved to model/mnist_cnn.pth")
+    os.makedirs('Model', exist_ok=True)
+    torch.save(model.state_dict(), 'Model/mnist_cnn.pth')
+    print("Model saved to Model/mnist_cnn.pth")
