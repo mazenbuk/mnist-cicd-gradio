@@ -4,6 +4,7 @@
 # 25150201111003_4 MUHAMMAD HERDI ADAM_4
 
 name: Continuous Deployment
+
 on:
   workflow_run:
     workflows: ["Continuous Integration"]
@@ -13,10 +14,15 @@ on:
   workflow_dispatch:
 
 jobs:
-  build:
+  deploy:
+    if: >
+      github.event.workflow_run.conclusion == 'success' &&
+      github.event.workflow_run.head_branch == 'main'
     runs-on: ubuntu-latest
+
     steps:
-      - uses: actions/checkout@v3
+      - name: Checkout code
+        uses: actions/checkout@v3
 
       - name: Deployment To Hugging Face
         env:
