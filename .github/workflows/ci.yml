@@ -1,10 +1,15 @@
+# 225150200111004_1 HAIKAL THORIQ ATHAYA_1
+# 225150200111008_2 MUHAMMAD ARSYA ZAIN YASHIFA_2
+# 225150201111001_3 JAVIER AAHMES REANSYAH_3
+# 25150201111003_4 MUHAMMAD HERDI ADAM_4
+
 name: Continuous Integration
 
 on:
   push:
-    branches: [ "main" ]
+    branches: ["main"]
   pull_request:
-    branches: [ "main" ]
+    branches: ["main"]
   workflow_dispatch:
 
 permissions: write-all
@@ -35,7 +40,7 @@ jobs:
         env:
           REPO_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: make eval
-        
+
       - name: Update Branch
         env:
           NAME: ${{ secrets.USER_NAME }}
