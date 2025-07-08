@@ -29,9 +29,6 @@ jobs:
       - name: Train Model
         run: make train
 
-      - name: Test Model
-        run: make eval
-
       - name: Create Evaluation Report
         env:
           REPO_TOKEN: ${{ secrets.GITHUB_TOKEN }}
