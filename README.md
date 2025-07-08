@@ -49,7 +49,7 @@ nmist/
 
 ### 1. Clone and Build
 ```bash
-git clone <repository-url>
+git clone https://github.com/mazenbuk/mnist-cicd-gradio.git
 cd nmist
 
 # Build Docker image (includes training and app)
