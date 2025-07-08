@@ -37,8 +37,11 @@ nmist/
 │   └── notebook.ipynb      # Experimentation notebook
 ├── Data/                   # Dataset storage
 │   └── MNIST/              # MNIST dataset (auto-downloaded)
-└── Model/                  # Trained model storage
-    └── mnist_cnn.pt        # Saved model weights
+├── Model/                  # Trained model storage
+│   └── mnist_cnn.pt        # Saved model weights
+└── Results/                # Training results (created by make train)
+    ├── metrics.txt         # Performance metrics
+    └── results.png         # Evaluation plots
 ```
 
 ## 🚀 Quick Start with Docker (Recommended)
@@ -49,7 +52,7 @@ nmist/
 
 ### 1. Clone and Build
 ```bash
-git clone <repository-url>
+git clone https://github.com/mazenbuk/mnist-cicd-gradio.git
 cd nmist
 
 # Build Docker image (includes training and app)
@@ -120,16 +123,19 @@ The project uses a **multi-stage Docker build**:
 |---------|-------------|
 | `make install` | Install dependencies |
 | `make train` | Train the CNN model |
+| `make eval` | Evaluate model and generate report |
 | `make format` | Format code with Black |
 | `make deploy` | Deploy to Hugging Face Spaces |
 
 ## 📊 Model Details
 
 - **Architecture**: SimpleCNN with 2 convolutional layers
-- **Framework**: PyTorch
+- **Framework**: PyTorch with TorchScript compilation
 - **Dataset**: MNIST (28x28 grayscale images)
-- **Performance**: ~97% accuracy on test set
-- **Training**: 3 epochs with Adam optimizer
+- **Training**: 5 epochs with Adam optimizer (lr=0.001)
+- **Data Augmentation**: Random rotation, translation, and scaling
+- **Model Format**: TorchScript (.pt file) for optimized inference
+- **Performance**: Training accuracy printed per epoch during training
 
 ## 🌐 Cloud Deployment
 
@@ -184,6 +190,6 @@ This project is for educational purposes as part of Machine Learning Operations 
 
 ## 🔗 Links
 
-- **Hugging Face Space**: [nmist](https://huggingface.co/spaces/mazenbuk/nmist)
+- **Hugging Face Space**: [MNIST](https://huggingface.co/spaces/mazenbuk/MNIST)
 - **Dataset**: [MNIST](http://yann.lecun.com/exdb/mnist/)
 - **Framework**: [PyTorch](https://pytorch.org/)
