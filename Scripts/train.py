@@ -28,25 +28,22 @@ class SimpleCNN(nn.Module):
         return x
 
 if __name__ == "__main__":
-    # Improved transform: random affine for robustness + normalize
     transform = transforms.Compose([
         transforms.RandomAffine(degrees=10, translate=(0.1, 0.1), scale=(0.9, 1.1)),
         transforms.ToTensor(),
         transforms.Normalize((0.5,), (0.5,))
     ])
 
-    os.makedirs('data', exist_ok=True)
-    os.makedirs('model', exist_ok=True)
+    os.makedirs('../Data', exist_ok=True)
+    os.makedirs('../Model', exist_ok=True)
 
-    train_dataset = datasets.MNIST(root='./data', train=True, download=True, transform=transform)
+    train_dataset = datasets.MNIST(root='../Data', train=True, download=True, transform=transform)
     train_loader = torch.utils.data.DataLoader(train_dataset, batch_size=64, shuffle=True)
 
-    # Init model, loss, optimizer
     model = SimpleCNN()
     criterion = nn.CrossEntropyLoss()
     optimizer = optim.Adam(model.parameters(), lr=0.001)
 
-    # Training loop
     num_epochs = 5
     for epoch in range(num_epochs):
         running_loss = 0.0
@@ -63,12 +60,12 @@ if __name__ == "__main__":
             _, predicted = torch.max(outputs, 1)
             total += labels.size(0)
             correct += (predicted == labels).sum().item()
-        
+
         epoch_loss = running_loss / len(train_loader)
         accuracy = 100 * correct / total
         print(f"Epoch [{epoch+1}/{num_epochs}] - Loss: {epoch_loss:.4f} - Accuracy: {accuracy:.2f}%")
 
-    # Save model
-    os.makedirs('Model', exist_ok=True)
-    torch.save(model.state_dict(), 'Model/mnist_cnn.pth')
-    print("Model saved to Model/mnist_cnn.pth")
+    example_input = torch.randn(1, 1, 28, 28)
+    model = torch.jit.trace(model, example_input)
+    model.save('../Model/mnist_cnn.pt')
+    print("TorchScript model saved to Model/mnist_cnn.pt")
