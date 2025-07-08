@@ -33,11 +33,11 @@ hf-login:
 	huggingface-cli login --token $(HF) --add-to-git-credential
 
 push-hub:
-	huggingface-cli upload mazenbuk/nmist ./App . --repo-type=space --commit-message="Sync App files"
-	huggingface-cli upload mazenbuk/nmist ./train.py train.py --repo-type=space --commit-message="Sync train script"
-	huggingface-cli upload mazenbuk/nmist ./Model/mnist_cnn.pth model/mnist_cnn.pth --repo-type=space --commit-message="Sync Model File"
+	huggingface-cli upload mazenbuk/MNIST ./App . --repo-type=space --commit-message="Sync App files"
+	huggingface-cli upload mazenbuk/MNIST ./Scripts/train.py train.py --repo-type=space --commit-message="Sync train script"
+	huggingface-cli upload mazenbuk/MNIST ./Model/mnist_cnn.pt model/mnist_cnn.pt --repo-type=space --commit-message="Sync Model File"
 	if [ -f ./Results/metrics.txt ]; then \
-		huggingface-cli upload mazenbuk/nmist ./Results/metrics.txt Results/metrics.txt --repo-type=space --commit-message="Sync Metrics File"; \
+		huggingface-cli upload mazenbuk/MNIST ./Results/metrics.txt Results/metrics.txt --repo-type=space --commit-message="Sync Metrics File"; \
 	fi
 
 deploy: hf-login push-hub
