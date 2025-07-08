@@ -60,4 +60,4 @@ iface = gr.Interface(
     description="Gambar sebuah digit dari 0-9 pada kanvas di bawah dan klik 'Submit' untuk melihat prediksi model."
 )
 
-iface.launch()
+iface.launch(server_name="0.0.0.0", server_port=7860)
