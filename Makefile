@@ -7,16 +7,17 @@ format:
 
 train:
 	mkdir -p Model Results
-	python train.py
+	python Scripts/train.py
 
 eval:
-	echo "## Model Metrics" > report.md
-	if [ -f ./Results/metrics.txt ]; then cat ./Results/metrics.txt >> report.md; fi
+	python Scripts/eval.py
+	echo "## Model Metrics" > Results/report.md
+	if [ -f ./Results/metrics.txt ]; then cat ./Results/metrics.txt >> Results/report.md; fi
 	if [ -f ./Results/results.png ]; then \
-		echo '\n## Evaluation Plot' >> report.md; \
-		echo '![Results](./Results/results.png)' >> report.md; \
+		echo '\n## Evaluation Plot' >> Results/report.md; \
+		echo '![Results](./Results/results.png)' >> Results/report.md; \
 	fi
-	cml comment create report.md
+	cml comment create Results/report.md
 
 update-branch:
 	git config --global user.name $(USER_NAME)

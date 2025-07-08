@@ -5,19 +5,10 @@
 
 import gradio as gr
 import torch
-import torch.nn as nn
 import torchvision.transforms as transforms
 from PIL import Image, ImageOps
-import numpy as np
-import sys
-import os
 
-
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
-from train import SimpleCNN
-
-model = SimpleCNN()
-model.load_state_dict(torch.load('model/mnist_cnn.pth', map_location='cpu'))
+model = torch.jit.load('Model/mnist_cnn.pt', map_location='cpu')
 model.eval()
 
 transform = transforms.Compose([
@@ -29,7 +20,6 @@ def preprocess_image(image_array):
     image = Image.fromarray(image_array.astype('uint8'), 'RGB')
     image = ImageOps.grayscale(image)
     image = ImageOps.invert(image)
-
     image = image.point(lambda x: 0 if x < 50 else 255, '1')
 
     bbox = image.getbbox()
@@ -40,7 +30,6 @@ def preprocess_image(image_array):
         top_left = ((28 - cropped.width) // 2, (28 - cropped.height) // 2)
         new_image.paste(cropped, top_left)
     else:
-
         new_image = Image.new('L', (28, 28), 0)
 
     return new_image
@@ -55,7 +44,6 @@ def predict_digit(input_data):
         return {str(i): 0.0 for i in range(10)}
 
     processed = preprocess_image(image_array)
-
     image_tensor = transform(processed).unsqueeze(0)
 
     with torch.no_grad():
