@@ -3,7 +3,7 @@ install:
 		pip install -r requirements.txt
 
 format:
-	black *.py
+	black Scripts/*.py
 
 train:
 	mkdir -p Model Results
