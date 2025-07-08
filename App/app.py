@@ -3,12 +3,16 @@
 # 225150201111001_3 JAVIER AAHMES REANSYAH_3
 # 225150201111003_4 MUHAMMAD HERDI ADAM_4
 
+import os
 import gradio as gr
 import torch
 import torchvision.transforms as transforms
 from PIL import Image, ImageOps
 
-model = torch.jit.load('Model/mnist_cnn.pt', map_location='cpu')
+ROOT_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
+MODEL_PATH = os.path.join(ROOT_DIR, 'Model', 'mnist_cnn.pt')
+
+model = torch.jit.load(MODEL_PATH, map_location='cpu')
 model.eval()
 
 transform = transforms.Compose([
