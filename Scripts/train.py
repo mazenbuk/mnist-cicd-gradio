@@ -28,16 +28,20 @@ class SimpleCNN(nn.Module):
         return x
 
 if __name__ == "__main__":
+    ROOT_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
+    DATA_DIR = os.path.join(ROOT_DIR, 'Data')
+    MODEL_DIR = os.path.join(ROOT_DIR, 'Model')
+
+    os.makedirs(DATA_DIR, exist_ok=True)
+    os.makedirs(MODEL_DIR, exist_ok=True)
+
     transform = transforms.Compose([
         transforms.RandomAffine(degrees=10, translate=(0.1, 0.1), scale=(0.9, 1.1)),
         transforms.ToTensor(),
         transforms.Normalize((0.5,), (0.5,))
     ])
 
-    os.makedirs('../Data', exist_ok=True)
-    os.makedirs('../Model', exist_ok=True)
-
-    train_dataset = datasets.MNIST(root='../Data', train=True, download=True, transform=transform)
+    train_dataset = datasets.MNIST(root=DATA_DIR, train=True, download=True, transform=transform)
     train_loader = torch.utils.data.DataLoader(train_dataset, batch_size=64, shuffle=True)
 
     model = SimpleCNN()
@@ -66,6 +70,7 @@ if __name__ == "__main__":
         print(f"Epoch [{epoch+1}/{num_epochs}] - Loss: {epoch_loss:.4f} - Accuracy: {accuracy:.2f}%")
 
     example_input = torch.randn(1, 1, 28, 28)
-    model = torch.jit.trace(model, example_input)
-    model.save('../Model/mnist_cnn.pt')
-    print("TorchScript model saved to Model/mnist_cnn.pt")
+    scripted_model = torch.jit.trace(model, example_input)
+    model_path = os.path.join(MODEL_DIR, 'mnist_cnn.pt')
+    scripted_model.save(model_path)
+    print(f"TorchScript model saved to {model_path}")
