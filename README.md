@@ -1,222 +1,189 @@
 # MNIST Digit Classification - MLOps Project
 
-A complete Machine Learning Operations (MLOps) project for handwritten digit classification using the MNIST dataset. This project demonstrates the full ML lifecycle from model training to production deployment with containerization and automated pipelines.
+A containerized MLOps project for handwritten digit classification using CNN and the MNIST dataset. Features automated training, interactive web interface, and Docker-based deployment.
+
+## 👥 Team Members
+
+- **225150200111004** - **Haikal Thoriq Athaya**
+- **225150200111008** - **Muhammad Arsya Zain Yashifa**  
+- **225150201111001** - **Javier Aahmes Reansyah**
+- **225150201111003** - **Muhammad Herdi Adam**
 
 ## 🎯 Project Overview
 
-This project implements a **Convolutional Neural Network (CNN)** to classify handwritten digits (0-9) from the MNIST dataset. It includes:
+This project implements a **Convolutional Neural Network (CNN)** to classify handwritten digits (0-9) from the MNIST dataset with:
 
-- **Model Training**: PyTorch-based CNN implementation
-- **Web Application**: Interactive Gradio interface for real-time predictions
-- **MLOps Pipeline**: Automated training, evaluation, and deployment
-- **Containerization**: Docker support with multi-stage builds
+- **Model Training**: PyTorch-based SimpleCNN with automated training pipeline
+- **Web Application**: Interactive Gradio interface for real-time digit recognition  
+- **Containerization**: Docker support with optimized multi-stage builds
 - **Cloud Deployment**: Integration with Hugging Face Spaces
 
 ## 🏗️ Project Structure
 
 ```
 nmist/
-├── train.py                 # Model training script
-├── notebook.ipynb          # Jupyter notebook for experimentation
+├── Dockerfile              # Multi-stage Docker build
+├── Makefile                # Automation commands
 ├── requirements.txt        # Training dependencies
-├── Dockerfile             # Multi-stage Docker build
-├── Makefile              # Automation commands
-├── App/                  # Web application
-│   ├── app.py           # Gradio web interface
-│   ├── requirements.txt # App dependencies
-│   └── README.md       # HuggingFace Space config
-├── Data/                # MNIST dataset
-│   └── MNIST/raw/      # Raw dataset files
-└── Model/              # Trained model files
-    └── mnist_cnn.pth  # Saved model weights
+├── .gitignore              # Git ignore file
+├── App/                    # Web application
+│   ├── app.py              # Gradio interface
+│   ├── requirements.txt    # App dependencies
+│   └── README.md           # HuggingFace Space config
+├── Scripts/                # Training and evaluation scripts
+│   ├── train.py            # Model training script
+│   └── eval.py             # Model evaluation script
+├── Notebooks/              # Jupyter notebooks
+│   └── notebook.ipynb      # Experimentation notebook
+├── Data/                   # Dataset storage
+│   └── MNIST/              # MNIST dataset (auto-downloaded)
+└── Model/                  # Trained model storage
+    └── mnist_cnn.pt        # Saved model weights
 ```
 
-## 🚀 Quick Start
+## 🚀 Quick Start with Docker (Recommended)
 
 ### Prerequisites
+- **Docker** (Docker Desktop recommended)
+- **Git** for cloning the repository
 
-- Python 3.10+
-- pip
-- Docker (optional, for containerized deployment)
+### 1. Clone and Build
+```bash
+git clone <repository-url>
+cd nmist
+
+# Build Docker image (includes training and app)
+docker build -t mnist-app .
+```
+
+### 2. Run Application
+```bash
+# Run container
+docker run -p 7860:7860 mnist-app
+
+# Or run in background
+docker run -d --name mnist-container -p 7860:7860 mnist-app
+```
+
+The application will be available at `http://localhost:7860`
+
+### 3. Docker Management
+```bash
+# View logs
+docker logs mnist-container
+
+# Stop container
+docker stop mnist-container
+
+# Remove container
+docker rm mnist-container
+```
+
+## 🔧 Alternative: Manual Setup
+
+If you prefer to run without Docker:
 
 ### 1. Install Dependencies
-
 ```bash
-make install
-# or
 pip install -r requirements.txt
 ```
 
-### 2. Train the Model
-
+### 2. Train Model
 ```bash
 make train
-# or
-python train.py
+# or manually: python Scripts/train.py
 ```
 
-### 3. Run the Web Application
-
+### 3. Run Web App
 ```bash
 cd App
 pip install -r requirements.txt
 python app.py
 ```
 
-The application will be available at `http://localhost:7860`
+## 🐳 Docker Architecture
 
-## 🔧 Model Architecture
+The project uses a **multi-stage Docker build**:
 
-The project uses a **SimpleCNN** architecture:
+- **Stage 1 (Builder)**: Trains the model using full training environment
+- **Stage 2 (App)**: Creates lightweight production image with only runtime dependencies
 
-- **Input**: 28x28 grayscale images
-- **Conv Layer 1**: 32 filters, 3x3 kernel, ReLU activation
-- **Conv Layer 2**: 64 filters, 3x3 kernel, ReLU activation
-- **MaxPooling**: 2x2 pooling after each conv layer
-- **Fully Connected**: 128 neurons, ReLU activation
-- **Output**: 10 classes (digits 0-9)
+**Benefits**:
+- Reduced final image size
+- Automated training during build
+- Production-ready deployment
+- Consistent environment across systems
 
-## 📱 Web Application Features
-
-- **Interactive Drawing Canvas**: Draw digits directly in the browser
-- **Real-time Prediction**: Instant classification results
-- **Probability Scores**: View confidence scores for all digit classes
-- **Image Preprocessing**: Automatic normalization and resizing
-
-## 🐳 Docker Deployment
-
-### Build and Run
-
-```bash
-docker build -t mnist-app .
-docker run -p 7860:7860 mnist-app
-```
-
-### Multi-stage Build Process
-
-1. **Builder Stage**: Trains the model and generates `mnist_cnn.pth`
-2. **App Stage**: Creates lightweight production image with only the application
-
-## 🛠️ Available Commands (Makefile)
+## 🛠️ Available Commands
 
 | Command | Description |
 |---------|-------------|
-| `make install` | Install Python dependencies |
+| `make install` | Install dependencies |
+| `make train` | Train the CNN model |
 | `make format` | Format code with Black |
-| `make train` | Train the model |
-| `make eval` | Generate evaluation report |
-| `make hf-login` | Login to Hugging Face |
-| `make push-hub` | Upload to Hugging Face Spaces |
-| `make deploy` | Full deployment pipeline |
+| `make deploy` | Deploy to Hugging Face Spaces |
 
-## 📊 Model Performance
+## 📊 Model Details
 
-- **Training Duration**: 3 epochs
-- **Optimizer**: Adam (lr=0.001)
-- **Loss Function**: CrossEntropyLoss
-- **Batch Size**: 64
+- **Architecture**: SimpleCNN with 2 convolutional layers
+- **Framework**: PyTorch
+- **Dataset**: MNIST (28x28 grayscale images)
+- **Performance**: ~97% accuracy on test set
+- **Training**: 3 epochs with Adam optimizer
 
 ## 🌐 Cloud Deployment
 
-This project is configured for deployment on **Hugging Face Spaces**:
+Deploy to Hugging Face Spaces:
 
 ```bash
+# Set environment variables
+export HF=your_huggingface_token
+export USER_NAME="Your Name"
+export USER_EMAIL="your@email.com"
+
+# Deploy
 make deploy
 ```
 
-This will:
-1. Login to Hugging Face
-2. Upload application files
-3. Upload trained model
-4. Deploy to your HF Space
-
 ## 📁 Key Files
 
-- **`train.py`**: Main training script with CNN implementation
-- **`App/app.py`**: Gradio web application
-- **`Dockerfile`**: Multi-stage container build
-- **`Makefile`**: Automation and deployment commands
-- **`notebook.ipynb`**: Jupyter notebook for experimentation
+- **`Scripts/train.py`**: Model training script with SimpleCNN implementation
+- **`Scripts/eval.py`**: Model evaluation script
+- **`App/app.py`**: Gradio web interface for predictions
+- **`App/README.md`**: HuggingFace Space configuration
+- **`Notebooks/notebook.ipynb`**: Jupyter notebook for experimentation
+- **`Dockerfile`**: Multi-stage build for training and deployment
+- **`requirements.txt`**: Training dependencies
+- **`App/requirements.txt`**: Production app dependencies
 
-## 🔄 MLOps Workflow
+## 🔧 Troubleshooting
 
-1. **Development**: Code in Jupyter notebook or Python scripts
-2. **Training**: Automated model training with `make train`
-3. **Evaluation**: Generate metrics and reports
-4. **Containerization**: Docker builds for reproducible deployment
-5. **Deployment**: Automated push to Hugging Face Spaces
-6. **Monitoring**: Track performance and model drift
+### Common Issues
 
-## 🛡️ Requirements
-
-### Training Environment
-```
-torch
-torchvision
-numpy
-black
-```
-
-### Application Environment
-```
-gradio
-torch
-torchvision
-numpy
-pillow
-```
-
-## 📝 Usage Examples
-
-### Training a Model
-```python
-python train.py
-```
-
-### Making Predictions
-```python
-from train import SimpleCNN
-import torch
-
-model = SimpleCNN()
-model.load_state_dict(torch.load('Model/mnist_cnn.pth'))
-model.eval()
-
-# Your prediction code here
-```
-
-### Running with Docker
+**Model not found error**:
 ```bash
-docker build -t mnist-classifier .
-docker run -p 7860:7860 mnist-classifier
+# Ensure model is trained
+make train
 ```
 
-## 🤝 Contributing
+**Port already in use**:
+```bash
+# Use different port
+docker run -p 8080:7860 mnist-app
+```
 
-1. Fork the repository
-2. Create a feature branch
-3. Make your changes
-4. Run `make format` to format code
-5. Submit a pull request
+**Docker build fails**:
+```bash
+# Clear Docker cache
+docker system prune -a
+```
 
 ## 📄 License
 
-This project is licensed under the Apache 2.0 License.
+This project is for educational purposes as part of Machine Learning Operations coursework.
 
 ## 🔗 Links
 
 - **Hugging Face Space**: [nmist](https://huggingface.co/spaces/mazenbuk/nmist)
 - **Dataset**: [MNIST](http://yann.lecun.com/exdb/mnist/)
 - **Framework**: [PyTorch](https://pytorch.org/)
-- **Interface**: [Gradio](https://gradio.app/)
-
-## 📚 Learning Objectives
-
-This project demonstrates:
-- **Deep Learning**: CNN implementation for image classification
-- **MLOps**: End-to-end ML pipeline automation
-- **Web Development**: Interactive ML applications
-- **DevOps**: Containerization and deployment strategies
-- **Cloud Computing**: Platform-as-a-Service deployment
-
-Perfect for learning modern MLOps practices and building production-ready ML applications!
